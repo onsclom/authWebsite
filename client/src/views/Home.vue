@@ -5,49 +5,56 @@
         <h1>Account</h1>
         <div class="form-group">
           <label for="inputUsername">Username</label>
-          <input type="username"
+          <input
+            type="username"
             class="form-control"
             id="inputUsername"
             aria-describedby="emailHelp"
-            placeholder="Enter username" v-model="username">
+            placeholder="Enter username"
+            v-model="username"
+          />
           <small id="usernameHelp" class="form-text text-muted">
-            {{usernameText}}
+            {{ usernameText }}
           </small>
         </div>
         <div class="form-group" v-show="showPassword">
           <label for="inputPassword">Password</label>
-          <input type="password" class="form-control"
-            id="inputPassword" placeholder="Password" v-model="password">
+          <input
+            type="password"
+            class="form-control"
+            id="inputPassword"
+            placeholder="Password"
+            v-model="password"
+          />
         </div>
-        <button type="submit" class="btn btn-primary"> {{buttonText}} </button>
+        <button type="submit" class="btn btn-primary">{{ buttonText }}</button>
       </form>
     </div>
   </div>
 </template>
 
 <script>
-
 export default {
   data: () => ({
-    username: '',
-    password: '',
-    buttonText: 'Login / Signup',
-    usernameText: '',
-    showPassword: false,
+    username: "",
+    password: "",
+    buttonText: "Login / Signup",
+    usernameText: "",
+    showPassword: false
   }),
   watch: {
     username(val) {
       if (val.length < 4) {
-        this.buttonText = 'Login / Signup';
-        this.usernameText = '';
-      } else if (val === 'austin') {
-        this.buttonText = 'Login';
-        this.usernameText = 'Username exists.';
+        this.buttonText = "Login / Signup";
+        this.usernameText = "";
+      } else if (val === "austin") {
+        this.buttonText = "Login";
+        this.usernameText = "Username exists.";
       } else {
-        this.buttonText = 'Signup';
-        this.usernameText = 'Username does not exist.';
+        this.buttonText = "Signup";
+        this.usernameText = "Username does not exist.";
       }
-    },
+    }
   },
   methods: {
     checkUsername() {
@@ -61,11 +68,10 @@ export default {
       //   this.usernameText = 'Username exists.';
       // }
       // this.showPassword = true;
-    },
+    }
   },
-  name: 'Signup',
-  el: '#signupForm',
-  components: {
-  },
+  name: "Signup",
+  el: "#signupForm",
+  components: {}
 };
 </script>
