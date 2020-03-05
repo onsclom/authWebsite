@@ -2,7 +2,7 @@
   <section class="text-center">
     <!-- Modal -->
     <div
-      class="modal fade"
+      class="modal fade text-left"
       id="myModal"
       tabindex="-1"
       role="dialog"
@@ -12,7 +12,9 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">{{formHeader}}</h5>
+            <h5 class="modal-title" id="exampleModalLongTitle">
+              {{ formHeader }}
+            </h5>
             <button
               type="button"
               class="close"
@@ -38,23 +40,40 @@
                   usernameText
                 }}</small>
               </div>
-              <div class="form-group">
-                <label for="inputPassword">Password</label>
-                <input
-                  type="password"
-                  class="form-control"
-                  id="inputPassword"
-                  placeholder="Password"
-                  v-model="password"
-                />
+              <div class="form-row">
+                <div class="col">
+                  <label for="inputPassword">Password</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="inputPassword"
+                    placeholder="Password"
+                    v-model="password"
+                  />
+                </div>
+
+                <div class="col" v-if="formHeader==='Register'">
+                  <label for="inputPassword">Verify Password</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="inputPassword"
+                    placeholder="Verify Password"
+                    v-model="verifyPassword"
+                  />
+                </div>
               </div>
-              <button type="submit" class="btn btn-primary">Login</button>
+
+              <div class="row justify-content-between mt-4">
+                <button type="button" class="btn btn-primary col-4 ml-3" v-on:click="toggle()">
+                  {{ toggleText }}
+                </button>
+                <button type="submit" class="btn btn-primary col-4 mr-3">
+                  {{ formHeader }}
+                </button>
+              </div>
             </form>
           </div>
-          <!-- <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>-->
         </div>
       </div>
     </div>
@@ -82,14 +101,30 @@ export default {
   data: () => ({
     username: "",
     password: "",
-    usernameText: "",
     formHeader: "Login",
+    toggleText: "Register",
+    verifyPassword: "",
     usernameText: ""
   }),
   methods: {
     submit() {
       console.log("WOW!");
-      this.$emit("messageFromChild");
+
+      
+
+      //this.$emit("messageFromChild");
+    },
+    toggle() {
+      if (this.formHeader == 'Login')
+      {
+        this.toggleText = this.formHeader;
+        this.formHeader = 'Register';
+      }
+      else
+      {
+        this.toggleText = this.formHeader;
+        this.formHeader = 'Login';
+      }
     }
   },
   props: {
