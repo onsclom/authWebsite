@@ -1,0 +1,5 @@
+TO DO:
+
+- client side verification before sign-in or login!
+- make animation for login <-> signup transformation
+
