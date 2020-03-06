@@ -1,14 +1,12 @@
 const express = require('express');
 const Joi = require('joi');
 const bcrypt = require('bcryptjs');
-const cors = require('cors');
 const db = require('../db/connection');
 const users = db.get('users');
 
 const router = express.Router();
 
 users.createIndex('username', { unique: true });
-router.use(cors());
 
 const schema = Joi.object().keys({
   username: Joi.string().regex(/(^[a-zA-Z0-9_]+$)/).min(2).max(30).required(),

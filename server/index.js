@@ -1,5 +1,6 @@
 const express = require('express');
 const volleyball = require('volleyball');
+const cors = require('cors');
 
 const app = express();
 
@@ -7,6 +8,7 @@ const app = express();
 // const auth = require('./auth/index');
 const auth = require('./auth');
 
+app.use(cors());
 app.use(volleyball);
 app.use(express.json());
 
