@@ -1,17 +1,20 @@
 const express = require('express');
 const Joi = require('joi');
 const bcrypt = require('bcryptjs');
-
+const cors = require('cors');
 const db = require('../db/connection');
 const users = db.get('users');
-users.createIndex('username', { unique: true });
 
 const router = express.Router();
+
+users.createIndex('username', { unique: true });
+router.use(cors());
 
 const schema = Joi.object().keys({
   username: Joi.string().regex(/(^[a-zA-Z0-9_]+$)/).min(2).max(30).required(),
   password: Joi.string().trim().min(10).required()
 });
+
 
 
 // any route in here is pre-pended with /auth
@@ -32,6 +35,7 @@ router.post('/signup', (req, res, next) => {
         // there is already a user in the db with this username...
         // respond with an error!
         const error = new Error('That username is taken. Please choose another one.');
+        res.status(422);
         next(error);
       } else {
         // hash the password
@@ -50,6 +54,7 @@ router.post('/signup', (req, res, next) => {
       }
     });
   } else {
+    res.status(422);
     next(result.error);
   }
 });

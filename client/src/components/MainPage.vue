@@ -52,7 +52,7 @@
                   />
                 </div>
 
-                <div class="col" v-if="formHeader==='Register'">
+                <div class="col" v-if="formHeader === 'Register'">
                   <label for="inputPassword">Verify Password</label>
                   <input
                     type="password"
@@ -65,7 +65,11 @@
               </div>
 
               <div class="row justify-content-between mt-4">
-                <button type="button" class="btn btn-primary col-4 ml-3" v-on:click="toggle()">
+                <button
+                  type="button"
+                  class="btn btn-primary col-4 ml-3"
+                  v-on:click="toggle()"
+                >
                   {{ toggleText }}
                 </button>
                 <button type="submit" class="btn btn-primary col-4 mr-3">
@@ -96,6 +100,8 @@
 </template>
 
 <script>
+const SIGNUP_URL = 'http://localhost:5000/auth/signup';
+
 export default {
   name: "MainPage",
   data: () => ({
@@ -110,7 +116,35 @@ export default {
     submit() {
       console.log("WOW!");
 
+      this.errorMessage = '';
+
+      const body = {
+        username: this.username,
+        password: this.password,
+      };
       
+      fetch(SIGNUP_URL, {
+        method: 'POST',
+        body: JSON.stringify(body),
+        headers: {
+          'content-type': 'application/json',
+        },
+      })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        return response.json().then((error) => {
+          throw new Error(error.message);
+        });
+      })
+        .then((response) => {
+        console.log("Successful login!");
+        console.log(response);
+      }).catch((error) => {
+        console.log("PROBLEM");
+        console.log(error);
+      });
 
       //this.$emit("messageFromChild");
     },

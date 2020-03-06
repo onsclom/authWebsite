@@ -9,15 +9,12 @@ const auth = require('./auth');
 
 app.use(volleyball);
 app.use(express.json());
-app.use("/", express.static(__dirname + "/public"));
 
-/*
 app.get('/', (req, res) => {
   res.json({
     message: 'wow. hello world!'
   });
 });
-*/
 
 app.use('/auth', auth);
 
