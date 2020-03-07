@@ -13,7 +13,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLongTitle">
-              {{ formHeader }}
+              {{ user.formHeader }}
             </h5>
             <button
               type="button"
@@ -25,6 +25,13 @@
             </button>
           </div>
           <div class="modal-body">
+            <div
+              class="alert alert-dismissible alert-danger"
+              v-if="shouldAlert"
+            >
+              {{ alertMessage }}
+            </div>
+
             <form class @submit.prevent="submit">
               <div class="form-group">
                 <label for="inputUsername">Username</label>
@@ -34,11 +41,8 @@
                   id="inputUsername"
                   aria-describedby="emailHelp"
                   placeholder="Enter username"
-                  v-model="username"
+                  v-model="user.username"
                 />
-                <small id="usernameHelp" class="form-text text-muted">{{
-                  usernameText
-                }}</small>
               </div>
               <div class="form-row">
                 <div class="col">
@@ -48,18 +52,18 @@
                     class="form-control"
                     id="inputPassword"
                     placeholder="Password"
-                    v-model="password"
+                    v-model="user.password"
                   />
                 </div>
 
-                <div class="col" v-if="formHeader === 'Register'">
+                <div class="col" v-if="user.formHeader === 'Register'">
                   <label for="inputPassword">Verify Password</label>
                   <input
                     type="password"
                     class="form-control"
                     id="inputPassword"
                     placeholder="Verify Password"
-                    v-model="verifyPassword"
+                    v-model="user.verifyPassword"
                   />
                 </div>
               </div>
@@ -70,10 +74,10 @@
                   class="btn btn-primary col-4 ml-3"
                   v-on:click="toggle()"
                 >
-                  {{ toggleText }}
+                  {{ user.toggleText }}
                 </button>
                 <button type="submit" class="btn btn-primary col-4 mr-3">
-                  {{ formHeader }}
+                  {{ user.formHeader }}
                 </button>
               </div>
             </form>
@@ -100,66 +104,88 @@
 </template>
 
 <script>
-const SIGNUP_URL = 'http://localhost:5000/auth/signup';
+const SIGNUP_URL = "http://localhost:5000/auth/signup";
 
 export default {
   name: "MainPage",
   data: () => ({
-    username: "",
-    password: "",
-    formHeader: "Login",
-    toggleText: "Register",
-    verifyPassword: "",
-    usernameText: ""
+    user: {
+      username: "",
+      password: "",
+      verifyPassword: "",
+      formHeader: "Login",
+      toggleText: "Register"
+    },
+    usernameText: "",
+    alertMessage: "testing",
+    shouldAlert: false
   }),
   methods: {
     submit() {
-      console.log("WOW!");
-
-      this.errorMessage = '';
-
-      const body = {
-        username: this.username,
-        password: this.password,
-      };
-      
-      fetch(SIGNUP_URL, {
-        method: 'POST',
-        body: JSON.stringify(body),
-        headers: {
-          'content-type': 'application/json',
-        },
-      })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        return response.json().then((error) => {
-          throw new Error(error.message);
-        });
-      })
-        .then((response) => {
-        console.log("Successful login!");
-        console.log(response);
-      }).catch((error) => {
-        console.log("PROBLEM");
-        console.log(error);
-      });
+      if (this.formHeader == "Login") {
+        this.login();
+      } else {
+        this.signup();
+      }
 
       //this.$emit("messageFromChild");
     },
-    toggle() {
-      if (this.formHeader == 'Login')
-      {
-        this.toggleText = this.formHeader;
-        this.formHeader = 'Register';
+    signup() {
+      if (this.user.password != this.user.verifyPassword) {
+        this.alertMessage = "Passwords must match.";
+        this.shouldAlert = true;
+        return;
       }
-      else
-      {
-        this.toggleText = this.formHeader;
-        this.formHeader = 'Login';
+
+      const body = {
+        username: this.user.username,
+        password: this.user.password
+      };
+
+      fetch(SIGNUP_URL, {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: {
+          "content-type": "application/json"
+        }
+      })
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          }
+          return response.json().then(error => {
+            throw new Error(error.message);
+          });
+        })
+        .then(response => {
+          console.log("Successful login!");
+          console.log(response);
+        })
+        .catch(error => {
+          console.log("PROBLEM");
+          console.log(error);
+        });
+    },
+    login() {},
+    toggle() {
+      if (this.user.formHeader == "Login") {
+        this.user.toggleText = this.user.formHeader;
+        this.user.formHeader = "Register";
+      } else {
+        this.user.toggleText = this.formHeader;
+        this.user.formHeader = "Login";
       }
     }
+  },
+  watch: {
+    user: {
+      // This will let Vue know to look inside the array
+      deep: true,
+      handler()
+      {
+        this.shouldAlert=false;
+      }
+    },
   },
   props: {
     msg: String

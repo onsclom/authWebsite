@@ -1,6 +1,9 @@
 <template>
   <!-- <MainPage/> -->
-  <component v-bind:is="curState" v-on:messageFromChild="childMessageReceived"></component>
+  <component
+    v-bind:is="curState"
+    v-on:messageFromChild="childMessageReceived"
+  ></component>
 </template>
 
 <script>
@@ -26,7 +29,7 @@ export default {
       console.log("got here!");
       this.curState = "SignedIn";
     }
-  },
+  }
 };
 </script>
 
